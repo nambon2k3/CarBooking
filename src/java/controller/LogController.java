@@ -6,6 +6,7 @@ package controller;
 
 import dao.UserDAO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,10 +19,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import util.PasswordUtil;
 
-/**
- *
- * @author Admin
- */
+@WebServlet(name = "Login", urlPatterns = {"/log"})
 public class LogController extends HttpServlet {
 
     /**
