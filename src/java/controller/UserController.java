@@ -1,5 +1,6 @@
 package controller;
 
+import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -9,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 
-@WebServlet(name = "UserController", urlPatterns = {"/UserController"})
+@WebServlet(name = "UserController", urlPatterns = {"/UserController", "/AdminUser"})
 public class UserController extends HttpServlet {
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,9 +59,11 @@ public class UserController extends HttpServlet {
 
     // List users (Empty method, provide the actual code here)
     private void listUsers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to list users here
-        // You should retrieve user data and forward to a JSP for rendering.
-        // Example: request.getRequestDispatcher("list.jsp").forward(request, response);
+        
+        request.setAttribute("userList", new UserDAO().getAllUsers());
+        
+        request.getRequestDispatcher("/admin/AdminUser.jsp").forward(request, response);
+        
     }
 
     // Show add user form (Empty method, provide the actual code here)
