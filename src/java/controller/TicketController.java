@@ -1,5 +1,7 @@
 package controller;
 
+import dao.BusDAO;
+import dao.TicketDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -7,12 +9,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Ticket;
 
 /**
  *
  * @author anhdu
  */
-@WebServlet(name = "TicketController", urlPatterns = {"/TicketController"})
+@WebServlet(name = "TicketController", urlPatterns = {"/TicketController", "/AdminTicket"})
 public class TicketController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -60,7 +63,11 @@ public class TicketController extends HttpServlet {
 
     // List tickets (Empty method, provide the actual code here)
     private void listTickets(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to list tickets here
+        
+        request.setAttribute("ticketList", new TicketDAO().getAllTickets());
+        
+        request.getRequestDispatcher("/admin/AdminTicket.jsp").forward(request, response);
+        
     }
 
     // Show add ticket form (Empty method, provide the actual code here)
@@ -75,7 +82,12 @@ public class TicketController extends HttpServlet {
 
     // Show update ticket form (Empty method, provide the actual code here)
     private void showUpdateTicketForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to display the update ticket form here
+        int id = Integer.parseInt(request.getParameter("id"));
+        Ticket ticket = new TicketDAO().getTicketById(id);
+        
+        request.setAttribute("busList", new BusDAO().getAllBuses());
+        request.setAttribute("ticket", ticket);
+        request.getRequestDispatcher("/admin/AddEditTicket.jsp").forward(request, response);
     }
 
     // Add a ticket (Empty method, provide the actual code here)
@@ -90,7 +102,10 @@ public class TicketController extends HttpServlet {
 
     // Delete a ticket (Empty method, provide the actual code here)
     private void deleteTicket(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to delete a ticket here
+        int id = Integer.parseInt(request.getParameter("id"));
+        new TicketDAO().deleteTicket(id);
+        
+        response.sendRedirect("AdminTicket");
     }
 }
 

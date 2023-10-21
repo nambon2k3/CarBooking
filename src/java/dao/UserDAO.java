@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import model.User;
 
 /**
@@ -21,7 +22,7 @@ import model.User;
 public class UserDAO extends DBContext {
 
     public User getUserByUsername(String username) {
-        String sql = "SELECT * FROM USERS WHERE Username = ? or email = ?";
+        String sql = "SELECT * FROM USERS WHERE username = ? or email = ?";
         User user = new User();
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -74,7 +75,7 @@ public class UserDAO extends DBContext {
     }
 
     public boolean checkExistedEmail(String email) {
-        String sql = "select email from users where email = ?";
+        String sql = "select email from Users where email = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
@@ -112,5 +113,57 @@ public class UserDAO extends DBContext {
         }
     }
 
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM Users";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String fullName = resultSet.getString("full_name");
+                String email = resultSet.getString("email");
+                String img = resultSet.getString("img");
+                String dob = resultSet.getString("dob");
+                int gender = resultSet.getInt("gender");
+                int role = resultSet.getInt("role");
+                int status = resultSet.getInt("status");
 
+                User user = new User(username, password, fullName, email, img, dob, gender, role, status);
+                users.add(user);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return users;
+    }
+
+    public void updateUser(User user) {
+        String query = "UPDATE Users SET password = ?, full_name = ?, email = ?, img = ?, dob = ?, gender = ?, role = ?, status = ? WHERE username = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, user.getPassword());
+            preparedStatement.setString(2, user.getFullName());
+            preparedStatement.setString(3, user.getEmail());
+            preparedStatement.setString(4, user.getImg());
+            preparedStatement.setString(5, user.getDob());
+            preparedStatement.setInt(6, user.getGender());
+            preparedStatement.setInt(7, user.getRole());
+            preparedStatement.setInt(8, user.getStatus());
+            preparedStatement.setString(9, user.getUsername());
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void deleteUser(String username) {
+        String query = "DELETE FROM Users WHERE username = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, username);
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
 }

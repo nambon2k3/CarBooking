@@ -13,9 +13,9 @@ public class TicketDAO extends DBContext {
     }
 
     public void createTicket(Ticket ticket) {
-        String query = "INSERT INTO ticket (username, busId, seatNumber) " +
-                       "VALUES (?, ?, ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        String query = "INSERT INTO ticket (username, busId, seatNumber) "
+                + "VALUES (?, ?, ?)";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, ticket.getUsername());
             preparedStatement.setInt(2, ticket.getBusId());
             preparedStatement.setInt(3, ticket.getSeatNumber());
@@ -28,8 +28,7 @@ public class TicketDAO extends DBContext {
     public List<Ticket> getAllTickets() {
         List<Ticket> tickets = new ArrayList<>();
         String query = "SELECT * FROM ticket";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query);  ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String username = resultSet.getString("username");
@@ -50,9 +49,34 @@ public class TicketDAO extends DBContext {
         return tickets;
     }
 
+    public Ticket getTicketById(int ticketId) {
+        Ticket ticket = null;
+        String query = "SELECT * FROM ticket WHERE id = ?";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, ticketId);
+            try ( ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String username = resultSet.getString("username");
+                    int busId = resultSet.getInt("busId");
+                    int seatNumber = resultSet.getInt("seatNumber");
+
+                    ticket = new Ticket();
+                    ticket.setId(id);
+                    ticket.setUsername(username);
+                    ticket.setBusId(busId);
+                    ticket.setSeatNumber(seatNumber);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return ticket;
+    }
+
     public void updateTicket(Ticket ticket) {
         String query = "UPDATE ticket SET username = ?, busId = ?, seatNumber = ? WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, ticket.getUsername());
             preparedStatement.setInt(2, ticket.getBusId());
             preparedStatement.setInt(3, ticket.getSeatNumber());
@@ -65,7 +89,7 @@ public class TicketDAO extends DBContext {
 
     public void deleteTicket(int ticketId) {
         String query = "DELETE FROM ticket WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, ticketId);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -73,4 +97,3 @@ public class TicketDAO extends DBContext {
         }
     }
 }
-

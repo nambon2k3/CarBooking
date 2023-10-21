@@ -1,5 +1,6 @@
 package controller;
 
+import dao.BusDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@WebServlet(name = "BusController", urlPatterns = {"/BusController", "/AdminBus"})
 public class BusController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -55,8 +57,11 @@ public class BusController extends HttpServlet {
 
     // List buses (Empty method, provide the actual code here)
     private void listBuses(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to list buses here
-        // You should retrieve bus data and forward to a JSP for rendering.
+        
+        request.setAttribute("busList", new BusDAO().getAllBuses());
+        
+        request.getRequestDispatcher("/admin/AdminBus.jsp").forward(request, response);
+        
     }
 
     // Show add bus form (Empty method, provide the actual code here)

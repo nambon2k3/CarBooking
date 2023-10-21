@@ -57,6 +57,14 @@ public class User {
         this.role = role;
         this.status = status;
     }
+    
+    public String getGenderString() {
+        return gender==1 ? "Female" : "Male";
+    }
+    
+    public String getStatusString() {
+        return status==1 ? "Active" : "Inactive";
+    }
 
     public int getStatus() {
         return status;
