@@ -41,6 +41,7 @@
                             <th>Username</th>
                             <th>Bus ID</th>
                             <th>Seat Number</th>
+                            <th>Booked date</th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
@@ -53,6 +54,7 @@
                                 <td>${ticket.username}</td>
                                 <td>${ticket.busId}</td>
                                 <td>${ticket.seatNumber}</td>
+                                <td>${ticket.bookedDate}</td>
                                 <th><a href="./AdminTicket?action=update&id=${ticket.id}">Edit</a></th>
                                 <th><a href="./AdminTicket?action=delete&id=${ticket.id}">Delete</a></th>
                             </tr>

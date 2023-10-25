@@ -34,12 +34,14 @@ public class TicketDAO extends DBContext {
                 String username = resultSet.getString("username");
                 int busId = resultSet.getInt("busId");
                 int seatNumber = resultSet.getInt("seatNumber");
+                Date bookedDate = resultSet.getDate("bookedDate"); // Retrieve the booking date
 
                 Ticket ticket = new Ticket();
                 ticket.setId(id);
                 ticket.setUsername(username);
                 ticket.setBusId(busId);
                 ticket.setSeatNumber(seatNumber);
+                ticket.setBookedDate(bookedDate); // Set the booking date
 
                 tickets.add(ticket);
             }
@@ -60,12 +62,14 @@ public class TicketDAO extends DBContext {
                     String username = resultSet.getString("username");
                     int busId = resultSet.getInt("busId");
                     int seatNumber = resultSet.getInt("seatNumber");
+                    Date bookedDate = resultSet.getDate("bookedDate"); // Retrieve the booking date
 
                     ticket = new Ticket();
                     ticket.setId(id);
                     ticket.setUsername(username);
                     ticket.setBusId(busId);
                     ticket.setSeatNumber(seatNumber);
+                    ticket.setBookedDate(bookedDate); // Set the booking date
                 }
             }
         } catch (SQLException ex) {
@@ -74,16 +78,19 @@ public class TicketDAO extends DBContext {
         return ticket;
     }
 
-    public void updateTicket(Ticket ticket) {
-        String query = "UPDATE ticket SET username = ?, busId = ?, seatNumber = ? WHERE id = ?";
+    public boolean updateTicket(Ticket ticket) {
+        String query = "UPDATE ticket SET username = ?, busId = ?, seatNumber = ?, bookedDate = ? WHERE id = ?";
         try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, ticket.getUsername());
             preparedStatement.setInt(2, ticket.getBusId());
             preparedStatement.setInt(3, ticket.getSeatNumber());
-            preparedStatement.setInt(4, ticket.getId());
+            preparedStatement.setDate(4, new Date(ticket.getBookedDate().getTime())); // Convert Date to java.sql.Date
+            preparedStatement.setInt(5, ticket.getId());
             preparedStatement.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
+            return false;
         }
     }
 

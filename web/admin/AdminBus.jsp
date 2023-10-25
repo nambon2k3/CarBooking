@@ -33,6 +33,13 @@
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
 
+                <div class="row mb-5">
+                    <div class="col-10">
+                    </div>
+                    <div class="col-2">
+                        <a class="btn btn-primary" href="./AdminBus?action=add">Add Bus</a>
+                    </div>
+                </div>
 
                 <table id="datatable">
                     <thead>
@@ -43,6 +50,8 @@
                             <th>Source</th>
                             <th>Destination</th> 
                             <th>Arrival Time</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
 
@@ -54,7 +63,9 @@
                                 <td>${bus.departureTime}</td>
                                 <td>${bus.source}</td>
                                 <td>${bus.destination}</td>
-                                <td>${bus.arrivalTime}</td> 
+                                <td>${bus.arrivalTime}</td>
+                                <th><a href="./AdminBus?action=update&id=${bus.id}">Edit</a></th>
+                                <th><a href="./AdminBus?action=delete&id=${bus.id}">Delete</a></th>
                             </tr>
                         </c:forEach>
                     </tbody>

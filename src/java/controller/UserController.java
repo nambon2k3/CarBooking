@@ -8,14 +8,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import model.User;
 
 @WebServlet(name = "UserController", urlPatterns = {"/UserController", "/AdminUser"})
 public class UserController extends HttpServlet {
-    
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        
+
         if (action == null) {
             // Default action if 'action' parameter is not provided
             action = "list";
@@ -44,7 +44,7 @@ public class UserController extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        
+
         switch (action) {
             case "add":
                 addUser(request, response);
@@ -59,11 +59,11 @@ public class UserController extends HttpServlet {
 
     // List users (Empty method, provide the actual code here)
     private void listUsers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         request.setAttribute("userList", new UserDAO().getAllUsers());
-        
+
         request.getRequestDispatcher("/admin/AdminUser.jsp").forward(request, response);
-        
+
     }
 
     // Show add user form (Empty method, provide the actual code here)
@@ -88,23 +88,42 @@ public class UserController extends HttpServlet {
 
     // Delete a user (Empty method, provide the actual code here)
     private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to delete a user here
-        // You should handle the user deletion logic, such as database operations.
-        // After deleting the user, you may redirect to a success page.
-        // Example: response.sendRedirect("success.jsp");
+        String username = request.getParameter("username");
+        int status = Integer.parseInt(request.getParameter("status"));
+        
+        new UserDAO().updateUserStatus(username, status);
+        response.sendRedirect("AdminUser");
     }
 
     // Show update user form (Empty method, provide the actual code here)
     private void showUpdateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to display the update user form here
-        // Example: request.getRequestDispatcher("update.jsp").forward(request, response);
+        String username = request.getParameter("username");
+
+        request.setAttribute("user", new UserDAO().getUserByUsername(username));
+        request.getRequestDispatcher("/admin/AddEditUser.jsp").forward(request, response);
     }
 
     // Update a user (Empty method, provide the actual code here)
     private void updateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to update a user here
-        // You should handle the form data and database operations for updating.
-        // After updating the user, you may redirect to a success page.
-        // Example: response.sendRedirect("success.jsp");
+        String username = request.getParameter("username");
+        String fullName = request.getParameter("fullName");
+        String email = request.getParameter("email");
+        String dob = request.getParameter("dob");
+        int gender = Integer.parseInt(request.getParameter("gender"));
+        int role = Integer.parseInt(request.getParameter("role"));
+        int status = Integer.parseInt(request.getParameter("status"));
+
+        User user = new UserDAO().getUserByUsername(username);
+
+        user.setFullName(fullName);
+        user.setEmail(email);
+        user.setDob(dob);
+        user.setGender(gender);
+        user.setRole(role);
+        user.setStatus(status);
+        
+        new UserDAO().updateUser(user);
+        
+        response.sendRedirect("AdminUser");
     }
 }

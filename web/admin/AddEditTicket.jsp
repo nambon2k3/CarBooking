@@ -33,42 +33,47 @@
             <div class="container px-4 px-lg-5 mt-5">
 
 
-                <h1>Ticket Booking</h1>
+                <h1>Ticket Management</h1>
 
                 <div class="row">
 
                     <div class="col-md-6">
 
-                        <form action="bookTicket" method="post">
-
+                        <form action="AdminTicket" method="post">
+                            <input type="hidden" name="id" value="${ticket.id}">
+                            <input type="hidden" name="action" value="update">
+                            
                             <div class="form-group">
                                 <label>Username</label>
-                                <input type="text" class="form-control" name="username">
+                                <input type="text" class="form-control" name="username" value="${ticket.username}" required>
                             </div>
 
                             <div class="form-group">
                                 <label>Bus</label>
-                                <select class="form-control" name="busId">
+                                <select class="form-control" name="busId" value="${ticket.busId}">
                                     <c:forEach items="${busList}" var="bus">
-                                        <option value="${bus.id}">${bus.source} - ${bus.destination}</option>
+                                        <option value="${bus.id}" <c:if test="${bus.id eq ticket.busId}">selected</c:if>>${bus.source} - ${bus.destination}</option>
                                     </c:forEach>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label>Seat Number</label>  
-                                <input type="text" class="form-control" name="seatNumber">
+                                <input type="text" class="form-control" name="seatNumber" value="${ticket.seatNumber}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Booked date</label>  
+                                <input type="date" class="form-control" name="bookedDate" value="${ticket.bookedDate}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="alert">${msg}</label>  
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Book Ticket</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
 
-                    </div>
-
-                    <div class="col-md-6">
-                        <table id="ticketTable" class="table table-bordered">
-                            <!-- datatable html --> 
-                        </table>
                     </div>
 
                 </div>

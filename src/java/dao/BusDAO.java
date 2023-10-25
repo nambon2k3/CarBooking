@@ -50,6 +50,29 @@ public class BusDAO extends DBContext {
         }
         return buses;
     }
+    
+    public Bus getBusById(String busId) {
+        Bus bus = null;
+        String query = "SELECT * FROM Bus WHERE id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, busId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    int seats = resultSet.getInt("seats");
+                    String departureTime = resultSet.getString("departureTime");
+                    String source = resultSet.getString("source");
+                    String destination = resultSet.getString("destination");
+                    String arrivalTime = resultSet.getString("arrivalTime");
+
+                    bus = new Bus(id, seats, departureTime, source, destination, arrivalTime);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return bus;
+    }
 
     public void updateBus(Bus bus) {
         String query = "UPDATE Bus SET seats = ?, departureTime = ?, source = ?, destination = ?, arrivalTime = ? WHERE id = ?";

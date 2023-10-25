@@ -43,6 +43,8 @@
                             <th>DOB</th>
                             <th>Gender</th>
                             <th>Status</th>
+                            <th>Edit</th>
+                            <th>Ban/Unban</th>
                         </tr>
                     </thead>
 
@@ -55,6 +57,11 @@
                                 <td>${user.dob}</td>
                                 <td>${user.getGenderString()}</td>
                                 <td>${user.getStatusString()}</td>
+                                <th><a href="./AdminUser?action=update&username=${user.username}">Edit</a></th>
+                                <th>
+                                    <a href="./AdminUser?action=delete&username=${user.username}&status=0">Ban</a>
+                                    <a href="./AdminUser?action=delete&username=${user.username}&status=1">Unban</a>
+                                </th>
                             </tr>
                         </c:forEach>
                     </tbody>

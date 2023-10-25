@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Bus;
 
 @WebServlet(name = "BusController", urlPatterns = {"/BusController", "/AdminBus"})
 public class BusController extends HttpServlet {
@@ -66,7 +67,9 @@ public class BusController extends HttpServlet {
 
     // Show add bus form (Empty method, provide the actual code here)
     private void showAddBusForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to display the add bus form here
+        request.setAttribute("action", "add");
+        
+        request.getRequestDispatcher("/admin/AddEditBus.jsp").forward(request, response);
     }
 
     // Show bus detail (Empty method, provide the actual code here)
@@ -76,22 +79,67 @@ public class BusController extends HttpServlet {
 
     // Show update bus form (Empty method, provide the actual code here)
     private void showUpdateBusForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to display the update bus form here
+        String id = request.getParameter("id");
+        request.setAttribute("bus", new BusDAO().getBusById(id));
+        request.setAttribute("action", "update");
+        
+        request.getRequestDispatcher("/admin/AddEditBus.jsp").forward(request, response);
     }
 
     // Add a bus (Empty method, provide the actual code here)
     private void addBus(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to add a bus here
+        
+        int seats = Integer.parseInt(request.getParameter("seats"));
+        String departureTime = request.getParameter("departureTime");
+        String source = request.getParameter("source");
+        String destination = request.getParameter("destination");
+        String arrivalTime = request.getParameter("arrivalTime");
+
+        // Create a Bus object and set its properties
+        Bus bus = new Bus();
+        bus.setSeats(seats);
+        bus.setDepartureTime(departureTime);
+        bus.setSource(source);
+        bus.setDestination(destination);
+        bus.setArrivalTime(arrivalTime);
+        
+        new BusDAO().createBus(bus);
+        
+        response.sendRedirect("AdminBus");
     }
 
     // Update a bus (Empty method, provide the actual code here)
     private void updateBus(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to update a bus here
+        
+        int id = Integer.parseInt(request.getParameter("id"));
+        int seats = Integer.parseInt(request.getParameter("seats"));
+        String departureTime = request.getParameter("departureTime");
+        String source = request.getParameter("source");
+        String destination = request.getParameter("destination");
+        String arrivalTime = request.getParameter("arrivalTime");
+
+        // Create a Bus object and set its properties
+        Bus bus = new Bus();
+        bus.setId(id);
+        bus.setSeats(seats);
+        bus.setDepartureTime(departureTime);
+        bus.setSource(source);
+        bus.setDestination(destination);
+        bus.setArrivalTime(arrivalTime);
+        
+        new BusDAO().updateBus(bus);
+        
+        response.sendRedirect("AdminBus");
     }
 
     // Delete a bus (Empty method, provide the actual code here)
     private void deleteBus(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to delete a bus here
+        
+        int id = Integer.parseInt(request.getParameter("id"));
+        new BusDAO().deleteBus(id);
+        
+        response.sendRedirect("AdminBus");
+        
     }
 }
 

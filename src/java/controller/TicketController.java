@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Date;
 import model.Ticket;
 
 /**
@@ -17,9 +18,10 @@ import model.Ticket;
  */
 @WebServlet(name = "TicketController", urlPatterns = {"/TicketController", "/AdminTicket"})
 public class TicketController extends HttpServlet {
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        
+
         if (action == null) {
             // Default action if 'action' parameter is not provided
             action = "list";
@@ -48,7 +50,7 @@ public class TicketController extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        
+
         switch (action) {
             case "add":
                 addTicket(request, response);
@@ -63,11 +65,11 @@ public class TicketController extends HttpServlet {
 
     // List tickets (Empty method, provide the actual code here)
     private void listTickets(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         request.setAttribute("ticketList", new TicketDAO().getAllTickets());
-        
+
         request.getRequestDispatcher("/admin/AdminTicket.jsp").forward(request, response);
-        
+
     }
 
     // Show add ticket form (Empty method, provide the actual code here)
@@ -84,7 +86,10 @@ public class TicketController extends HttpServlet {
     private void showUpdateTicketForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Ticket ticket = new TicketDAO().getTicketById(id);
-        
+
+        if (request.getParameter("error") != null) {
+            request.setAttribute("msg", "Update failed!");
+        }
         request.setAttribute("busList", new BusDAO().getAllBuses());
         request.setAttribute("ticket", ticket);
         request.getRequestDispatcher("/admin/AddEditTicket.jsp").forward(request, response);
@@ -97,15 +102,43 @@ public class TicketController extends HttpServlet {
 
     // Update a ticket (Empty method, provide the actual code here)
     private void updateTicket(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement your code to update a ticket here
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        String username = request.getParameter("username");
+        int busId = Integer.parseInt(request.getParameter("busId"));
+        int seatNumber = Integer.parseInt(request.getParameter("seatNumber"));
+        String dateString = request.getParameter("bookedDate");
+        Date bookedDate = null;
+
+        if (dateString != null && !dateString.isEmpty()) {
+            try {
+                // Parse the string date into a java.sql.Date
+                bookedDate = Date.valueOf(dateString);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace(); // Handle parsing error if necessary
+            }
+        }
+
+        // Create a Ticket object and set its properties
+        Ticket ticket = new Ticket();
+        ticket.setId(id);
+        ticket.setUsername(username);
+        ticket.setBusId(busId);
+        ticket.setSeatNumber(seatNumber);
+        ticket.setBookedDate(bookedDate);
+
+        if (new TicketDAO().updateTicket(ticket)) {
+            response.sendRedirect("AdminTicket");
+        } else {
+            response.sendRedirect("AdminTicket?action=update&id=" + id + "&error");
+        }
     }
 
     // Delete a ticket (Empty method, provide the actual code here)
     private void deleteTicket(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         new TicketDAO().deleteTicket(id);
-        
+
         response.sendRedirect("AdminTicket");
     }
 }
-

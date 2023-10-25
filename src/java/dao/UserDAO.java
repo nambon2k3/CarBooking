@@ -137,7 +137,7 @@ public class UserDAO extends DBContext {
         }
         return users;
     }
-
+    
     public void updateUser(User user) {
         String query = "UPDATE Users SET password = ?, full_name = ?, email = ?, img = ?, dob = ?, gender = ?, role = ?, status = ? WHERE username = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -150,6 +150,17 @@ public class UserDAO extends DBContext {
             preparedStatement.setInt(7, user.getRole());
             preparedStatement.setInt(8, user.getStatus());
             preparedStatement.setString(9, user.getUsername());
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void updateUserStatus(String username, int status) {
+        String query = "UPDATE Users SET status = ? WHERE username = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, status);
+            preparedStatement.setString(2, username);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
