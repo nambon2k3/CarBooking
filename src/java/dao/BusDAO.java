@@ -31,26 +31,28 @@ public class BusDAO extends DBContext {
 
     public List<Bus> getAllHomeBuses() {
         List<Bus> buses = new ArrayList<>();
-        String query = "DECLARE @currentDate DATE;\n"
-                + "SET @currentDate = GETDATE(); -- Get the current date\n"
-                + "\n"
-                + "SELECT\n"
-                + "    B.[id] AS BusId,\n"
-                + "    B.[seats] AS TotalSeats,\n"
-                + "    B.[departureTime],\n"
-                + "    B.[source],\n"
-                + "    B.[destination],\n"
-                + "    B.[arrivalTime],\n"
-                + "    B.[seats] - ISNULL(T.BookedSeats, 0) AS AvailableSeats\n"
-                + "FROM [dbo].[Bus] B\n"
-                + "LEFT JOIN (\n"
-                + "    SELECT\n"
-                + "        [busId],\n"
-                + "        COUNT([id]) AS BookedSeats\n"
-                + "    FROM [dbo].[ticket]\n"
-                + "    WHERE CAST([bookedDate] AS DATE) = @currentDate\n"
-                + "    GROUP BY [busId]\n"
-                + ") T ON B.[id] = T.[busId];";
+        String query = "SELECT\n"
+                + "    [dbo].[Bus].[id],\n"
+                + "    [dbo].[Bus].[seats] - COALESCE(COUNT(CASE WHEN CAST([dbo].[ticket].[bookedDate] AS DATE) = CAST(GETDATE() AS DATE) THEN [dbo].[ticket].[id] END), 0) AS seats,\n"
+                + "    [dbo].[Bus].[departureTime],\n"
+                + "    [dbo].[Bus].[source],\n"
+                + "    [dbo].[Bus].[destination],\n"
+                + "    [dbo].[Bus].[arrivalTime]\n"
+                + "FROM\n"
+                + "    [dbo].[Bus]\n"
+                + "LEFT JOIN\n"
+                + "    [dbo].[ticket]\n"
+                + "ON\n"
+                + "    [dbo].[Bus].[id] = [dbo].[ticket].[busId]\n"
+                + "GROUP BY\n"
+                + "    [dbo].[Bus].[id],\n"
+                + "    [dbo].[Bus].[seats],\n"
+                + "    [dbo].[Bus].[departureTime],\n"
+                + "    [dbo].[Bus].[source],\n"
+                + "    [dbo].[Bus].[destination],\n"
+                + "    [dbo].[Bus].[arrivalTime]\n"
+                + "ORDER BY\n"
+                + "    [dbo].[Bus].[id];";
         try ( PreparedStatement preparedStatement = connection.prepareStatement(query);  ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
