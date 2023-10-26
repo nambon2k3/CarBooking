@@ -64,6 +64,15 @@ public class BusController extends HttpServlet {
         request.getRequestDispatcher("/admin/AdminBus.jsp").forward(request, response);
         
     }
+    
+    // List buses (Empty method, provide the actual code here)
+    private void listHomeBuses(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        request.setAttribute("busList", new BusDAO().getAllBuses());
+        
+        request.getRequestDispatcher("template.jsp").forward(request, response);
+        
+    }
 
     // Show add bus form (Empty method, provide the actual code here)
     private void showAddBusForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

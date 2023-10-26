@@ -103,4 +103,59 @@ public class TicketDAO extends DBContext {
             ex.printStackTrace();
         }
     }
+
+    public List<Ticket> getBookedTicketsByUsername(String username) {
+        List<Ticket> tickets = new ArrayList<>();
+        String query = "SELECT\n"
+                + "    [dbo].[ticket].[id],\n"
+                + "    [dbo].[ticket].[busId],\n"
+                + "    [dbo].[ticket].[seatNumber],\n"
+                + "    [dbo].[ticket].[bookedDate]\n"
+                + "FROM\n"
+                + "    [dbo].[ticket]\n"
+                + "WHERE\n"
+                + "    [dbo].[ticket].[username] = '" + username + "'";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query);  ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int busId = resultSet.getInt("busId");
+                int seatNumber = resultSet.getInt("seatNumber");
+                Date bookedDate = resultSet.getDate("bookedDate"); // Retrieve the booking date
+
+                Ticket ticket = new Ticket();
+                ticket.setId(id);
+                ticket.setUsername(username);
+                ticket.setBusId(busId);
+                ticket.setSeatNumber(seatNumber);
+                ticket.setBookedDate(bookedDate); // Set the booking date
+
+                tickets.add(ticket);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return tickets;
+    }
+
+    public int getTotalTicketsByBusId(String busId) {
+        int totalTickets = 0;
+
+        String query = "SELECT COUNT(*) AS total FROM ticket WHERE busId = ?";
+
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, busId);
+
+            try ( ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    totalTickets = resultSet.getInt("total");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalTickets;
+    }
+
 }

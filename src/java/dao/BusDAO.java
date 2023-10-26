@@ -15,9 +15,9 @@ public class BusDAO extends DBContext {
     }
 
     public void createBus(Bus bus) {
-        String query = "INSERT INTO Bus (seats, departureTime, source, destination, arrivalTime) " +
-                       "VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        String query = "INSERT INTO Bus (seats, departureTime, source, destination, arrivalTime) "
+                + "VALUES (?, ?, ?, ?, ?)";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, bus.getSeats());
             preparedStatement.setString(2, bus.getDepartureTime());
             preparedStatement.setString(3, bus.getSource());
@@ -29,11 +29,31 @@ public class BusDAO extends DBContext {
         }
     }
 
-    public List<Bus> getAllBuses() {
+    public List<Bus> getAllHomeBuses() {
         List<Bus> buses = new ArrayList<>();
-        String query = "SELECT * FROM Bus";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        String query = "SELECT\n"
+                + "    [dbo].[Bus].[id],\n"
+                + "    [dbo].[Bus].[seats] - COALESCE(COUNT([dbo].[ticket].[id]), 0) AS seats,\n"
+                + "    [dbo].[Bus].[departureTime],\n"
+                + "    [dbo].[Bus].[source],\n"
+                + "    [dbo].[Bus].[destination],\n"
+                + "    [dbo].[Bus].[arrivalTime]\n"
+                + "FROM\n"
+                + "    [dbo].[Bus]\n"
+                + "LEFT JOIN\n"
+                + "    [dbo].[ticket]\n"
+                + "ON\n"
+                + "    [dbo].[Bus].[id] = [dbo].[ticket].[busId]\n"
+                + "GROUP BY\n"
+                + "    [dbo].[Bus].[id],\n"
+                + "    [dbo].[Bus].[seats],\n"
+                + "    [dbo].[Bus].[departureTime],\n"
+                + "    [dbo].[Bus].[source],\n"
+                + "    [dbo].[Bus].[destination],\n"
+                + "    [dbo].[Bus].[arrivalTime]\n"
+                + "ORDER BY\n"
+                + "    [dbo].[Bus].[id];";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query);  ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 int seats = resultSet.getInt("seats");
@@ -50,13 +70,34 @@ public class BusDAO extends DBContext {
         }
         return buses;
     }
-    
+
+    public List<Bus> getAllBuses() {
+        List<Bus> buses = new ArrayList<>();
+        String query = "SELECT * FROM Bus";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query);  ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int seats = resultSet.getInt("seats");
+                String departureTime = resultSet.getString("departureTime");
+                String source = resultSet.getString("source");
+                String destination = resultSet.getString("destination");
+                String arrivalTime = resultSet.getString("arrivalTime");
+
+                Bus bus = new Bus(id, seats, departureTime, source, destination, arrivalTime);
+                buses.add(bus);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return buses;
+    }
+
     public Bus getBusById(String busId) {
         Bus bus = null;
         String query = "SELECT * FROM Bus WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, busId);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try ( ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     int id = resultSet.getInt("id");
                     int seats = resultSet.getInt("seats");
@@ -76,7 +117,7 @@ public class BusDAO extends DBContext {
 
     public void updateBus(Bus bus) {
         String query = "UPDATE Bus SET seats = ?, departureTime = ?, source = ?, destination = ?, arrivalTime = ? WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, bus.getSeats());
             preparedStatement.setString(2, bus.getDepartureTime());
             preparedStatement.setString(3, bus.getSource());
@@ -91,7 +132,7 @@ public class BusDAO extends DBContext {
 
     public void deleteBus(int busId) {
         String query = "DELETE FROM Bus WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, busId);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -99,4 +140,3 @@ public class BusDAO extends DBContext {
         }
     }
 }
-

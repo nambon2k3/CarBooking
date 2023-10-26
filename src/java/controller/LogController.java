@@ -121,17 +121,12 @@ public class LogController extends HttpServlet {
 
                     //direct role admin
                     if (user.getRole() == 0) {
-                        response.sendRedirect("addashboard");
+                        response.sendRedirect("AdminBus");
                         return;
                     }
                     
                     if (user.getRole() == 1) {
-                        response.sendRedirect("cmhome");
-                        return;
-                    }
-                    
-                    if (user.getRole() == 2) {
-                        response.sendRedirect("lecturerhome");
+                        response.sendRedirect("home");
                         return;
                     }
                 }else {
@@ -171,17 +166,12 @@ public class LogController extends HttpServlet {
 
                     //direct role admin
                     if (user.getRole() == 0) {
-                        response.sendRedirect("addashboard");
+                        response.sendRedirect("AdminBus");
                         return;
                     }
-                          
-                    if (user.getRole() == 1) {
-                        response.sendRedirect("cmhome");
-                        return;
-                    }   
                     
-                    if (user.getRole() == 2) {
-                        response.sendRedirect("lecturerhome");
+                    if (user.getRole() == 1) {
+                        response.sendRedirect("home");
                         return;
                     }
                 } else {

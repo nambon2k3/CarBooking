@@ -1,6 +1,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page import="java.util.Date" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,38 +26,25 @@
         <section class="py-5">
 
             <div class="container px-4 px-lg-5 mt-5">
-                <h2 style="margin-bottom: 50px">Available Bus</h2>
-                <table id="datatable">
-
-                    <thead>
-                        <tr>
-                            <th>Bus ID</th>
-                            <th>Seats Left</th>
-                            <th>Departure Time</th>
-                            <th>Source</th>
-                            <th>Destination</th> 
-                            <th>Arrival Time</th>
-                            <th>Book Tickets</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <c:forEach items="${busList}" var="bus">
-                            <c:if test="${bus.seats ne 0}">
-                                <tr>
-                                    <td>${bus.getId()}</td>
-                                    <td>${bus.seats}</td>
-                                    <td>${bus.departureTime}</td>
-                                    <td>${bus.source}</td>
-                                    <td>${bus.destination}</td>
-                                    <td>${bus.arrivalTime}</td>
-                                    <th><a href="./bookdetail?id=${bus.id}">Book Now</a></th>
-                                </tr>
-                            </c:if>
-                        </c:forEach>
-                    </tbody>
-                </table>
-
+                <h2 style="margin-bottom: 50px">Book Bus Detail</h2>
+                <div style="margin: auto; width: fit-content; border: 1px solid; padding: 30px">
+                    <h2>Project worlds Digital Ticket</h2>
+                    <h2>Journey Date <%= new Date()%></h2>
+                    <h2>Departure at: <strong>${bus.departureTime}</strong> from <strong>${bus.source}</strong></h2>
+                    <h2>Departure at: <strong>${bus.arrivalTime}</strong> near <strong>${bus.destination}</strong></h2>
+                    <h2>Seat Number: <strong>${seatId + 1}</strong> </h2>
+                    <h2>Passenger ID: <strong>${sessionScope.user.username}</strong> </h2>
+                    <div style="text-align: center; margin-top: 50px">
+                        <a class="btn btn-outline-dark" href="submit?id=${bus.id}&seatNumber=${seatId + 1}" style="margin-right: 50px">
+                            <i class="bi-box-arrow-right me-1"></i>
+                            Submit 
+                        </a>
+                        <a class="btn btn-outline-dark" href="home">
+                            <i class="bi-back me-1"></i>
+                            Cancel
+                        </a>
+                    </div>
+                </div>
 
             </div>
         </section>

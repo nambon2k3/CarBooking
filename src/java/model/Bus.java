@@ -78,5 +78,12 @@ public class Bus {
     public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
+
+    @Override
+    public String toString() {
+        return "Bus{" + "id=" + id + ", seats=" + seats + ", departureTime=" + departureTime + ", source=" + source + ", destination=" + destination + ", arrivalTime=" + arrivalTime + '}';
+    }
+    
+    
 }
 

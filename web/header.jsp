@@ -15,7 +15,7 @@
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="home">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">Booking</a></li>
             </ul>
@@ -23,10 +23,10 @@
 
                 <c:choose>
                     <c:when test="${not empty sessionScope.user}">
-                        <button class="btn btn-outline-dark" type="submit">
+                        <a class="btn btn-outline-dark" href="booked">
                             <i class="bi-clock me-1"></i>
                             Booked list
-                        </button>
+                        </a>
 
                         <a class="btn btn-outline-dark ms-3" href="profile">
                             <i class="bi-person me-1"></i>
