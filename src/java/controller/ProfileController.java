@@ -73,7 +73,21 @@ public class ProfileController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+        String username = request.getParameter("username");
+        String fullName = request.getParameter("fullName");
+        String email = request.getParameter("email");
+        String dob = request.getParameter("dob");
+        int gender = Integer.parseInt(request.getParameter("gender"));
+
+        // Create a User object with the updated profile information
+        User updatedUser = new User(username, null, fullName, email, null, dob, gender, 0, 0);
+
+        // Update the user's profile in the database
+        UserDAO userDAO = new UserDAO();
+        userDAO.updateUserProfile(updatedUser);
+        
+        response.sendRedirect("profile");
     }
 
     /**

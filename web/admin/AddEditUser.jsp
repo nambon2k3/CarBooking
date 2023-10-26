@@ -69,8 +69,8 @@
                     <div class="form-group">
                         <label for="role">Role</label>
                         <select class="form-control" id="role" name="role" value="${user.role}">
-                            <option value="0">User</option>
-                            <option value="1">Admin</option>
+                            <option value="0">Admin</option>
+                            <option value="1">User</option>
                         </select>
                     </div>
 

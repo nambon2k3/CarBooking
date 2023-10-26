@@ -116,8 +116,7 @@ public class UserDAO extends DBContext {
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM Users";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query);  ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 String username = resultSet.getString("username");
                 String password = resultSet.getString("password");
@@ -137,10 +136,10 @@ public class UserDAO extends DBContext {
         }
         return users;
     }
-    
+
     public void updateUser(User user) {
         String query = "UPDATE Users SET password = ?, full_name = ?, email = ?, img = ?, dob = ?, gender = ?, role = ?, status = ? WHERE username = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, user.getPassword());
             preparedStatement.setString(2, user.getFullName());
             preparedStatement.setString(3, user.getEmail());
@@ -155,10 +154,10 @@ public class UserDAO extends DBContext {
             ex.printStackTrace();
         }
     }
-    
+
     public void updateUserStatus(String username, int status) {
         String query = "UPDATE Users SET status = ? WHERE username = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, status);
             preparedStatement.setString(2, username);
             preparedStatement.executeUpdate();
@@ -167,14 +166,40 @@ public class UserDAO extends DBContext {
         }
     }
 
+    public void updateUserProfile(User user) {
+        String query = "UPDATE Users SET full_name = ?, email = ?, dob = ?, gender = ? WHERE username = ?";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, user.getFullName());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getDob());
+            preparedStatement.setInt(4, user.getGender());
+            preparedStatement.setString(5, user.getUsername());
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void updatePassword(String username, String newPassword) {
+        String sql = "UPDATE Users SET password = ? WHERE username = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, newPassword);
+            ps.setString(2, username);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("updatePassword: " + e.getMessage());
+        }
+    }
+
     public void deleteUser(String username) {
         String query = "DELETE FROM Users WHERE username = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, username);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-    
+
 }

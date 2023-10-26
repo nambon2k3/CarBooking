@@ -30,12 +30,9 @@
 
                 <h1>User Profile Update</h1>
 
-                <form action="update-profile-servlet" method="post">
-                    <!-- User profile picture -->
-                    <div class="form-group">
-                        <label for="profilePicture">Profile Picture</label>
-                        <input type="file" class="form-control-file" id="profilePicture" name="profilePicture">
-                    </div>
+                <form action="profile" method="post">
+
+                    <input type="hidden" name="username" value="${user.username}">
 
                     <!-- Full Name -->
                     <div class="form-group">
@@ -64,17 +61,23 @@
                             <option value="1" <c:if test="${user.gender eq 1}">selected</c:if>>Female</option>
                         </select>
                     </div>
-                        
-                        <div style="display: flex; width: 100%">
-                            <div style="width: 50%;">
-                            
-                            </div>
-                            <div style="width: 50%;">
-                            
-                            </div>
+
+                    <div style="display: flex; width: 100%">
+                        <div style="width: 50%;">
+
                         </div>
+                        <div style="width: 50%;">
+
+                        </div>
+                    </div>
+
+                    <br>
 
                     <button type="submit" class="btn btn-primary">Update Profile</button>
+                    
+                    <br><br>
+
+                    <a href="ChangePass" class="btn btn-secondary">Change password</a>
                 </form>
 
             </div>
