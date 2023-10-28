@@ -25,9 +25,6 @@
                 <div class="nav-menu" id="navMenu">
                     <ul>
                         <li><a href="home" class="link active">Home</a></li>
-                        <li><a href="#" class="link">Course</a></li>
-                        <li><a href="#" class="link">Community</a></li>
-                        <li><a href="#" class="link">About</a></li>
                     </ul>
                 </div>
                 <div class="nav-button">
