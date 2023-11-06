@@ -35,6 +35,7 @@
                             <th>Source</th>
                             <th>Destination</th>
                             <th>Arrival Time</th>
+                            <th>Number of seats</th>
                             <th>ACtion</th>
                         </tr>
                     </thead>
@@ -49,6 +50,7 @@
                                 <td>${booked.getValue().source}</td>
                                 <td>${booked.getValue().destination}</td>
                                 <td>${booked.getValue().arrivalTime}</td>
+                                <td>${booked.getKey().numberSeat}</td>
                                 <th><a href="./cancel?id=${booked.getKey().id}">Cancel</a></th>
                             </tr>
                         </c:forEach>

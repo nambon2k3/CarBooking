@@ -33,7 +33,7 @@ public class BusDAO extends DBContext {
         List<Bus> buses = new ArrayList<>();
         String query = "SELECT\n"
                 + "    [dbo].[Bus].[id],\n"
-                + "    [dbo].[Bus].[seats] - COALESCE(COUNT(CASE WHEN CAST([dbo].[ticket].[bookedDate] AS DATE) = CAST(GETDATE() AS DATE) THEN [dbo].[ticket].[id] END), 0) AS seats,\n"
+                + "    [dbo].[Bus].[seats] - COALESCE(SUM(CASE WHEN CAST([dbo].[ticket].[bookedDate] AS DATE) = CAST(GETDATE() AS DATE) THEN [dbo].[ticket].[number] END), 0) AS seats,\n"
                 + "    [dbo].[Bus].[departureTime],\n"
                 + "    [dbo].[Bus].[source],\n"
                 + "    [dbo].[Bus].[destination],\n"

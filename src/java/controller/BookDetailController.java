@@ -63,8 +63,10 @@ public class BookDetailController extends HttpServlet {
     // Show update bus form (Empty method, provide the actual code here)
     private void showUpdateBusDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = request.getParameter("id");
+        String numberTicket = request.getParameter("numberTicket");
         request.setAttribute("bus", new BusDAO().getBusById(id));
         request.setAttribute("seatId", new TicketDAO().getTotalTicketsByBusId(id));
+        request.setAttribute("numberTicket", numberTicket);
         request.getRequestDispatcher("book-detail.jsp").forward(request, response);
     }
     

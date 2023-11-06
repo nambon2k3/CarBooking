@@ -34,8 +34,9 @@
                     <h2>Departure at: <strong>${bus.arrivalTime}</strong> near <strong>${bus.destination}</strong></h2>
                     <h2>Seat Number: <strong>${seatId + 1}</strong> </h2>
                     <h2>Passenger ID: <strong>${sessionScope.user.username}</strong> </h2>
+                    <h2>Number ticket: <strong>${numberTicket}</strong> </h2>
                     <div style="text-align: center; margin-top: 50px">
-                        <a class="btn btn-outline-dark" href="submit?id=${bus.id}&seatNumber=${seatId + 1}" style="margin-right: 50px">
+                        <a class="btn btn-outline-dark" href="submit?id=${bus.id}&seatNumber=${seatId + 1}&number=${numberTicket}" style="margin-right: 50px">
                             <i class="bi-box-arrow-right me-1"></i>
                             Submit 
                         </a>

@@ -71,9 +71,10 @@ public class SubmitBookedController extends HttpServlet {
         }
         
         int busId = Integer.parseInt(request.getParameter("id"));
+        int number = Integer.parseInt(request.getParameter("number"));
         int seatId = Integer.parseInt(request.getParameter("seatNumber"));
-        Ticket ticket = new Ticket(0, user.getUsername(), busId, seatId, new Date());
-        new TicketDAO().createTicket(ticket);
+        Ticket ticket = new Ticket(0, user.getUsername(), busId, seatId, new Date(), number);
+        new TicketDAO().editTicket(ticket);
         response.sendRedirect("booked");
     }
 

@@ -62,7 +62,6 @@ public class HomeController extends HttpServlet {
     
     // List buses (Empty method, provide the actual code here)
     private void listHomeBuses(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
         request.setAttribute("busList", new BusDAO().getAllHomeBuses());
         request.getRequestDispatcher("template.jsp").forward(request, response);
         

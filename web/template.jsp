@@ -37,6 +37,7 @@
                             <th>Destination</th> 
                             <th>Arrival Time</th>
                             <th>Book Tickets</th>
+                            <th>Number Tickets</th>
                         </tr>
                     </thead>
 
@@ -50,13 +51,26 @@
                                     <td>${bus.source}</td>
                                     <td>${bus.destination}</td>
                                     <td>${bus.arrivalTime}</td>
-                                    <th><a href="./bookdetail?id=${bus.id}">Book Now</a></th>
+                                    <th>
+                                        <a href="#" onclick="book(${bus.getId()})">Book Now</a>
+                                    </th>
+                                    <th>
+                                        <input id="number-${bus.getId()}" type="number" name="numberTicket" value="1">
+                                    </th>
                                 </tr>
                             </c:if>
                         </c:forEach>
                     </tbody>
                 </table>
-
+                
+                <script>
+                    
+                    function book(id) {
+                        let numberSeat = document.getElementById('number-' + id).value;
+                        window.location.href = './bookdetail?id=' + id + '&numberTicket=' + numberSeat;
+                    }
+                    
+                </script>
 
             </div>
         </section>
